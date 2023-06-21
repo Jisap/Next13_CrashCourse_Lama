@@ -7,14 +7,15 @@ import Post from "@/models/Post";
 
 
 export const GET = async (request) => {                                             // Petición para obtener los post de un usuario
-    //const url = new URL(request.url);                                               // De la petición obtenemos la url
+   
+    const url = new URL(request.url);                                               // De la petición obtenemos la url
 
-    //const username = url.searchParams.get("username");                              // De los params de la url obtenemos el username            
+    const username = url.searchParams.get("username");                              // De los params de la url obtenemos el username            
 
     try {
         await connect();                                                            // Conexión a la bd
 
-        const posts = await Post.find();                                            // Buscamos los post que tengan el username de la url
+        const posts = await Post.find(username && { username });                    // Buscamos los post que tengan el username de la url
       
         return new NextResponse(JSON.stringify(posts), { status: 200 });            // respuesta
     } catch (err) {
@@ -24,6 +25,7 @@ export const GET = async (request) => {                                         
 };
 
 export const POST = async (request) => {
+    
     const body = await request.json();
 
     const newPost = new Post(body);
